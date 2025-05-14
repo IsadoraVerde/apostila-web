@@ -40,7 +40,7 @@ Aula 02 - Metabolismo.mp3"></textarea>
       status.textContent = 'Enviando...';
 
       try {
-        const resposta = await fetch('https://https://n8n.faculdademaratlantico.com.br/webhook/apostila', {
+        const resposta = await fetch('https://n8n.faculdademaratlantico.com.br/webhook-test/apostila', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ driveLink: link, ordemArquivos: ordem })
