@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerador de Apostilas</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    input, textarea, button { width: 100%; padding: 10px; margin-top: 10px; font-size: 16px; }
+    button { background-color: #2d89ef; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #1b5cb8; }
+    h2 { color: #333; }
+  </style>
+</head>
+<body>
+  <h2>Gerador de Apostilas</h2>
+
+  <label for="driveLink">Link da Pasta do Google Drive:</label>
+  <input type="text" id="driveLink" placeholder="Cole aqui o link da pasta com os arquivos" />
+
+  <label for="fileOrder">Ordem dos Arquivos (um por linha, na ordem desejada):</label>
+  <textarea id="fileOrder" rows="8" placeholder="Exemplo:
+Aula 01 - Introdução.mp4
+Aula 02 - Metabolismo.mp3"></textarea>
+
+  <button onclick="enviarDados()">Enviar e Gerar Apostila</button>
+
+  <p id="status"></p>
+
+  <script>
+    async function enviarDados() {
+      const link = document.getElementById('driveLink').value.trim();
+      const ordem = document.getElementById('fileOrder').value.trim().split('\n').map(l => l.trim()).filter(Boolean);
+      const status = document.getElementById('status');
+
+      if (!link || ordem.length === 0) {
+        status.textContent = 'Por favor, insira o link e a ordem dos arquivos.';
+        return;
+      }
+
+      status.textContent = 'Enviando...';
+
+      try {
+        const resposta = await fetch('https://SEU_WEBHOOK_DO_N8N', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ driveLink: link, ordemArquivos: ordem })
+        });
+
+        if (resposta.ok) {
+          status.textContent = 'Solicitação enviada com sucesso! Você receberá sua apostila em breve.';
+        } else {
+          status.textContent = 'Erro ao enviar a solicitação. Verifique os dados.';
+        }
+      } catch (erro) {
+        status.textContent = 'Erro de conexão. Tente novamente mais tarde.';
+        console.error(erro);
+      }
+    }
+  </script>
+</body>
+</html>
